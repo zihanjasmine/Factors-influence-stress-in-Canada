@@ -31,6 +31,7 @@ You can and should cross-reference sections and sub-sections. For instance, Sect
  (Figure \@ref(fig:bills)).
 
 ```{r bills, fig.cap="Bills of penguins", echo = FALSE}
+# Replication of Figure 1
 f1 <- read.csv("fig_1.csv")
 ggplot(f1, aes(x = year, y=brate_all)) +
   geom_point() +
