@@ -3,13 +3,12 @@ title: ' 304 paper 3 '
 author:
 - Zihan Zhang
 - Qiuhan Wang
-- Haoran LI
+thanks: "Code and data are available at: https://github.com/zihanjasmine/Toronto-shelter-flow."
 date: "`r format(Sys.time(), '%d %B %Y')`"
+abstract: "More and more Canadian social and economic issues have led to many discussions about stress levels. Assessing people’s mental health is beneficial for the government to take actions to improve people’s happiness index. In the report, we use the “Canadians at Work and Home” aspect of 2016 Canadian Government General Social Survey data to analyze factors influencing Canadian stress levels. The results of the survey suggest that job satisfactions, living standards, sex and many other factors play big roles in stress assessments. Moreover, 39.4% of people feel not stressed and 43.2% of people feel a bit stressed in Canada, which means that government can take more actions to help people balance their lifestyle, work, and well-being."
 output:
-  pdf_document: default
-  word_document: default
-abstract: More and more Canadian social and economic issues have led to many discussions about stress levels. Assessing people’s mental health is beneficial for the government to take actions to improve people’s happiness index. In the report, we use the “Canadians at Work and Home” aspect of 2016 Canadian Government General Social Survey data to analyze factors influencing Canadian stress levels. The results of the survey suggest that job satisfactions, living standards, sex and many other factors play big roles in stress assessments. Moreover, 39.4% of people feel not stressed and 43.2% of people feel a bit stressed in Canada, which means that government can take more actions to help people balance their lifestyle, work, and well-being.
-thanks: 'Code and data are available at: '
+  bookdown::pdf_document2
+bibliography: references.bib'
 ---
 
 ```{r setup, include=FALSE}
@@ -31,32 +30,19 @@ library(modelsummary)
 
 ```{r,include=FALSE}
 # import data
-raw_data <- read_csv("raw data.csv")
+clean_data<-  read_csv(here::here("inputs/data/clean data.csv"))
 ```
 
 
 
 
 ```{r ,include=FALSE}
-cleanda <- da%>%
-  filter(smg_01 <= '5') %>%
-  filter(smk_05 <= '3') %>%
-  filter(drr_110 <= '7') %>%
-  filter(smg_02 <= '7') %>%
-  filter(dos_01 <= '10') %>%
-  mutate(stress = case_when(smg_01 == '1' ~"Not at all stressful",
-                            smg_01 == '2' ~ "Not very stressful",
-                            smg_01 == '3' ~ "A bit stressful",
-                            smg_01 == '4' ~ "Quite A bit stressful",
-                            TRUE ~ "Extremely stressful")) 
 
 
-
-
-maledata <- cleanda %>%
+maledata <- clean_data %>%
   filter(sex == '1')
 
-femaledata <- cleanda %>%
+femaledata <- clean_data %>%
   filter(sex =='2')
 ```
 
@@ -85,22 +71,11 @@ The article is structured as follows. First, I introduce the survey including th
 
 
 
-```{r}
-
-library(modelsummary)
-cleanda %>% 
-  datasummary_skim(type = "categorical",
-                   title = "Summary of categorical economic indicator 
-                   variables for four countries")
-
-```
 
 
 
 
 
-
-## Data 
 
 ### Data collection
 
@@ -108,10 +83,11 @@ All the data used in this paper was retrieved from Candian General Social Survey
 
 ###Data processing 
 
-All analysis was done with a statistic programming language R (R Core Team 2020). We downloaded some important variables from the survey “General social survey on Canadians at Work and Home” like stress level, alcohol consumption, etc. from Candian GSS and loaded it to R. During our analysis, we ignored the data for which the answer was skipped and not known using the R function “filter”. R package “tidyverse” is used to manipulate the data and “ggplot2” is used for data visualization. 
+All analysis was done with a statistic programming language R [@citeR]. We downloaded some important variables from the survey “General social survey on Canadians at Work and Home” like stress level, alcohol consumption, etc. from Canadian GSS and loaded it to R. During our analysis, we ignored the data for which the answer was skipped and not known using the R function “filter”. R package “tidyverse”[@citetidyverse] is used to manipulate the data and “ggplot2” [@citeggplot2] is used for data visualization. 
 
 
-###Population and sample
+
+### Population and sample
 
 The GSS survey collected 19,609 questionnaires. The target population is non-institutionalized individuals aged over 15 years old in 10 Canadian provinces. 
 In this paper, we selected only some of the useful variables related to mental health in the survey and eliminated invalid responses. Therefore, our data is reduced and it contains 16440 observations. Since we have a large amount of data, removing some observations will not lead to a significant impact on the conclusions drawn from the data.
@@ -130,6 +106,44 @@ Non-sampling errors may occur at survey operation, especially in the CATI phase.
 
 
 
+## Result
+
+Moreover, we can see that almost half of the sampling population works 40 hours per week, and nearly a quarter of people has to work overtime to complete their job from figure \@ref(fig:hours). From table  \@ref(tab:tablestress) and figure \@ref(fig:piegraph), we can tell that Canadian people generally have lower stress levels and work and family are the main sources of stress in life. 80% of Canadians feel a little stress in life. Work stress accounts for the largest share of stress, which is 23%. If we look into the details of the graphs, we find that there is a big difference in the sources of stress for men and women. 26% of women cite family as their primary source of stress, twice as many as men. 32% of males consider work as their main source of stress, while that of female is 18%. We can tell from the graphs that women take more responsibility for child care, housework, while men are the main breadwinners. 
+
+
+
+
+From figure \@ref(fig:alcohol) about 10% of people who feel not very stressful and a bit stressful smoke every day, and 20% of people who feel extremely stressful smoke every day. When stress becomes excessive, many Canadians increase the use of cigarettes to relieve stress in life. However, in figure \@ref(fig:smoking) there is no strong correlation between stress level and alcohol consumption. Many people smoke to ease feelings of stress, however, smoking only makes things worse. Smoking increases the risks of cancer, lung disease, and many chronic diseases. Nicotine provides immediate relaxation, but the effect is temporary. The feeling of relaxation is actually the symptom of withdrawal from nicotine (Choi et al., 2015). 
+
+
+
+From figure \@ref(fig:satisfaction), we can conclude that job satisfaction and personal relationship are negatively correlated with stress. people are satisfied with their job and confident about their personal relationships usually not bothered by stress. 
+
+
+```{r tablestress, echo=FALSE,message=FALSE,warning=FALSE}
+
+library(modelsummary)
+
+clean_data <- clean_data %>%
+  mutate(stress=fct_relevel(stress,"Extremely stressful", after=3)) %>%
+   mutate(stress=fct_relevel(stress,"A bit stressful", after=1))
+
+
+clean_data %>% 
+  datasummary_skim(type = "categorical",
+                   title = "Summary of categorical economic indicator 
+                   variables for four countries")
+
+```
+
+
+
+
+
+
+
+
+
 
 ```{r piegraph,warning=FALSE,message=FALSE,echo = FALSE}
 names = c("Work", 
@@ -143,13 +157,13 @@ names = c("Work",
 
 
 # count the number of people for each main source of stress
-p1 <- sum(cleanda$smg_02 ==1) 
-p2 <- sum(cleanda$smg_02 ==2)
-p3 <- sum(cleanda$smg_02 ==3)
-p4 <- sum(cleanda$smg_02 ==4)
-p5 <- sum(cleanda$smg_02 ==5)
-p6 <- sum(cleanda$smg_02 ==6)
-p7 <- sum(cleanda$smg_02 ==7)
+p1 <- sum(clean_data$source_of_stress ==1) 
+p2 <- sum(clean_data$source_of_stress ==2)
+p3 <- sum(clean_data$source_of_stress ==3)
+p4 <- sum(clean_data$source_of_stress ==4)
+p5 <- sum(clean_data$source_of_stress ==5)
+p6 <- sum(clean_data$source_of_stress ==6)
+p7 <- sum(clean_data$source_of_stress ==7)
 
 y=c(p1,p2,p3,p4,p5,p6,p7)
 
@@ -162,13 +176,13 @@ legend("topright", names, cex=0.8, fill=rainbow(length(y)))
 
 par(mfrow=c(1,2))
 
-m1 <- sum(maledata$smg_02 ==1) 
-m2 <- sum(maledata$smg_02 ==2)
-m3 <- sum(maledata$smg_02 ==3)
-m4 <- sum(maledata$smg_02 ==4)
-m5 <- sum(maledata$smg_02 ==5)
-m6 <- sum(maledata$smg_02 ==6)
-m7 <- sum(maledata$smg_02 ==7)
+m1 <- sum(maledata$source_of_stress ==1) 
+m2 <- sum(maledata$source_of_stress ==2)
+m3 <- sum(maledata$source_of_stress ==3)
+m4 <- sum(maledata$source_of_stress ==4)
+m5 <- sum(maledata$source_of_stress ==5)
+m6 <- sum(maledata$source_of_stress ==6)
+m7 <- sum(maledata$source_of_stress ==7)
 
 y1=c(m1,m2,m3,m4,m5,m6,m7)
 
@@ -184,13 +198,13 @@ piemale <-pie(y1,
 
 
 
-fm1 <- sum(femaledata$smg_02 ==1) 
-fm2 <- sum(femaledata$smg_02 ==2)
-fm3 <- sum(femaledata$smg_02 ==3)
-fm4 <- sum(femaledata$smg_02 ==4)
-fm5 <- sum(femaledata$smg_02 ==5)
-fm6 <- sum(femaledata$smg_02 ==6)
-fm7 <- sum(femaledata$smg_02 ==7)
+fm1 <- sum(femaledata$source_of_stress ==1) 
+fm2 <- sum(femaledata$source_of_stress ==2)
+fm3 <- sum(femaledata$source_of_stress ==3)
+fm4 <- sum(femaledata$source_of_stress ==4)
+fm5 <- sum(femaledata$source_of_stress ==5)
+fm6 <- sum(femaledata$source_of_stress ==6)
+fm7 <- sum(femaledata$source_of_stress ==7)
 
 y2=c(fm1,fm2,fm3,fm4,fm5,fm6,fm7)
 
@@ -209,6 +223,25 @@ piefemale <-pie(y2,
 
 
 
+
+```{r hours,warning=FALSE,message=FALSE,echo = FALSE}
+Name = c("0-15 hours", 
+         "16-29 hours", 
+          "30 to 40 hours", 
+          "Over 41 hours")
+h1 <- sum(clean_data$hours_worked =='1') 
+h2 <- sum(clean_data$hours_worked =='2')
+h3 <- sum(clean_data$hours_worked =='3')
+h4 <- sum(clean_data$hours_worked =='4')
+
+hour=c(h1,h2,h3,h4)
+cols = c("#ED1C24","#22B14C","#FFC90E","#3f48CC")
+# calculate the percentage
+piepercent = paste(round(100*hour/sum(hour)), "%")
+# draw the pie graph
+pie(hour, labels=piepercent,col = cols, main ="Number of hours worked per week at job")
+legend("topright", Name, cex=0.8, fill=cols)
+```
 
 
 
@@ -230,9 +263,9 @@ piefemale <-pie(y2,
 # create a function to arrange elements alphabetically
 
 
-ggplot(cleanda,
+ggplot(clean_data,
        aes(x=stress,
-           fill = factor(drr_110, 
+           fill = factor(alcohol_consumption, 
                          levels =c("1","2","3","4","5","6","7"),
                          labels = c("Everyday",
                                     "4-6 times a week",
@@ -256,10 +289,10 @@ theme_minimal()
 
 
 
-```{r}
-ggplot(cleanda,
+```{r smoking,warning=FALSE,message=FALSE,echo = FALSE}
+ggplot(clean_data,
        aes(x=stress,
-           fill= factor(smk_05,
+           fill= factor(smoking_status,
                         levels =c("1","2","3"),
                         labels = c("Daily",
                                     "Occasionally",
@@ -288,10 +321,10 @@ theme_minimal()
 
 
 
-```{r}
-ggplot(cleanda, 
+```{r satisfaction,warning=FALSE,message=FALSE,echo = FALSE}
+ggplot(clean_data, 
        aes(x = stress, 
-           fill = factor(dos_01))) + 
+           fill = factor(job_satisfication))) + 
 geom_bar(position = "dodge") +
 labs(x="stress level",
      fill="Job satisfaction",
@@ -301,53 +334,34 @@ labs(x="stress level",
 
 
 
-ggplot(cleanda, 
+ggplot(clean_data, 
        aes(x = stress, 
-           fill = factor(dos_04))) + 
+           fill = factor(personal_relationship_level))) + 
 geom_bar(position = "dodge") +
 labs(x="stress level",
      fill="Personal relationships",
      title="Personal relationships and stress level")
 ```
+ 
 
 
 
 
 
 
-```{r}
-Name = c("0-15 hours", 
-         "16-29 hours", 
-          "30 to 40 hours", 
-          "Over 41 hours")
-h1 <- sum(cleanda$whw120gr =='1') 
-h2 <- sum(cleanda$whw120gr =='2')
-h3 <- sum(cleanda$whw120gr =='3')
-h4 <- sum(cleanda$whw120gr =='4')
 
-hour=c(h1,h2,h3,h4)
-cols = c("#ED1C24","#22B14C","#FFC90E","#3f48CC")
-# calculate the percentage
-piepercent = paste(round(100*hour/sum(hour)), "%")
-# draw the pie graph
-pie(hour, labels=piepercent,col = cols, main ="Number of hours worked per week at job")
-legend("topright", Name, cex=0.8, fill=cols)
+
+```{r regression, warning=FALSE,message=FALSE,echo = FALSE}
+
+
+regression_model <- lm(stresslevel ~ sex+ health_level +personal_relationship_level +number_of_children +age_group+ job_satisfaction +apperance_level, data=clean_data)
+
+
+
+modelsummary(regression_model)
 ```
 
-
-
-
-
-```{r}
-library(lme4)
-
-model <- lmer(smg_01 ~ sex+ dos_01 +dos_02 +dos_04 +chh0014c +agegr10+ (1|smk_05), data=cleanda)
-summary(model)
-
-
-```
-
-
+Based on our findings above, we build a linear regression model to estimate Canadian's stress level. From table \@ref(tab:regression), older people with higher job satisfaction  health level has higher stress level. Appearance level and personal relationship level has weak correlation with stress. However, our model has a low R-Squared value, which suggests that our model shows a low correlation. 
 
 
 
@@ -356,47 +370,8 @@ summary(model)
 
 ## Discussion
 
-## Survey
-
-A survey was created and conducted by the Canadian Government assess the mental health status of all people from aged 15 or older in 10 Canadian provinces. We choose 16 major questions from the survey which is related on the respondent's gender, age, marital status, number of children in the household, participation in the outdoor activities in the past 12 months, hours worked at job per week, level of stress in the daily life, major stress, Alcohol, Smoke, satisfaction about their job, Discrimination during work, level of their satisfaction from standard, health, personal relationship,and the appearance themselves. The aims of the report is based on the fact that what Canadian stress really comes from. For example, the answers to questions 1-12 are raised on the basis of individual choices, while questions about their satisfaction levels (questions 13-16) are ranked in linear scale（0 being not at all satisfied, 10 being completely satisfied. This survey is contacted by letter. Considering the low response rate or the possibility of no response, the survey was also conducted through the Internet and telephone. Overall, the survey aims to provide real data to the government on the basis of current Canadian stress, so that the government can reduce the current pressure on Canadians by introducing corresponding policies.
-
-## Result
-
-From the main source of stress about Canadians (Figure 1), male and female have different stress aspect among each other.We can see that male, respond to greater stress at work, about 32%(figure 2), while female's stress comes from the family, accounted for 26%(figure 3). Moreover, in the Alcohol consumption aspect, some Canadians do not use alcohol to relieve stress when they have a bit stressful or not very stressful. However, some people use alcohol once or twice a month to help them reduce stress. However, the result shown in figure 5 is very interesting, they don't reduce stress by smoking. Surprisingly，the respondent satisfied about their current job,shown in figure 6.
-
-```{r, include=TRUE, message=FALSE, echo=FALSE}
-parallel_lines <-lm(smg_01 ~ sex+ dos_01 +dos_02 +dos_04 +chh0014c +agegr10+ (1|smk_05), data=cleanda)
-summary(parallel_lines)
-```
 
 
-
-```{r, include=TRUE, message=FALSE, echo=FALSE}
-cleanda %>%
-  ggplot(aes(x=marstat, y=chh0014c, color=stress))+
-  geom_point(alpha=0.5)+geom_smooth(method="lm",se=FALSE)
-```
-
-Graph 1 illustrate the distribution of martial status(marstat) and number of children in the household(chh0014c). 
-```{r, include=TRUE, message=FALSE, echo=FALSE}
-maledata %>%
-  ggplot(aes(x=agearr10, y=marstat, color=stress))+
-  geom_point(alpha=0.5)+geom_smooth(method="lm",se=FALSE)
-```
-
-
-```{r, include=TRUE, message=FALSE, echo=FALSE}
-femaledata %>%
-  ggplot(aes(x=chh0014c, y=marstat, color=stress))+
-  geom_point(alpha=0.5)+geom_smooth(method="lm",se=FALSE)
-```
-
-
-```{r, include=TRUE, message=FALSE, echo=FALSE}
-cleanda %>%
-  ggplot(aes(x=drr_110, y=smk_05, color=stress))+
-  geom_point(alpha=0.5)+geom_smooth(method="lm",se=FALSE)
-```
 
 
 
@@ -420,5 +395,35 @@ https://docs.google.com/forms/d/e/1FAIpQLSdCXMqiHZyVJzhO5mn4ewHXJ_EHNakJrglcv-p3
 
 # Reference
 
+1.Candian GSS
 Government of Canada, S. C. (2017, February 27). The General Social Survey: An overview. Government of Canada, Statistics Canada. Retrieved March 8, 2022, from https://www150.statcan.gc.ca/n1/pub/89f0115x/89f0115x2013001-eng.htm
+
+2.R
+ R Core Team (2021). R: A language and environment for statistical computing. R
+  Foundation for Statistical Computing, Vienna, Austria. URL
+  https://www.R-project.org/.
+  
+3. ggplot2
+ H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New
+  York, 2016.
+
+  
+  
+4. modelsummary
+
+  Vincent Arel-Bundock (2022). modelsummary: Summary Tables and Plots for
+  Statistical Models and Data: Beautiful, Customizable, and Publication-Ready. R
+  package version 0.9.6. https://CRAN.R-project.org/package=modelsummary
+  
+  
+  
+  
+  
+  
+```{r, include=FALSE}
+citation()
+
+citation(package = "ggplot2")
+citation(package = "modelsummary")
+```
 

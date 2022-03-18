@@ -34,14 +34,19 @@ cleandata <- raw_data %>%
          source_of_stress= smg_02,
          alcohol_consumption = drr_110,
          smoking_status=smk_05,
-         job_satisfication = jsr_02,
+         job_satisfaction = jsr_02,
          discrimination_Frequency=dbh_02,
          living_standard = dos_01,
          health_level= dos_02,
          personal_relationship_level=dos_04,
-         apperance_level = dos_05)
+         appearance_level = dos_05)
 
 clean_data <- cleandata %>%
+  filter(stresslevel <= '5') %>%
+  filter(smoking_status <= '3') %>%
+  filter(alcohol_consumption <= '7') %>%
+  filter(source_of_stress <= '7') %>%
+  filter(living_standard <= '10') %>%
   mutate(stress = case_when(stresslevel == '1' ~"Not at all stressful",
                             stresslevel == '2' ~ "Not very stressful",
                             stresslevel == '3' ~ "A bit stressful",
@@ -50,6 +55,6 @@ clean_data <- cleandata %>%
 
 
 
-write_csv(clean_data, ""clean data.csv")
+write_csv(clean_data, "inputs/data/clean data.csv")
 
          
