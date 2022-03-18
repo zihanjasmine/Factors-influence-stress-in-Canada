@@ -1,128 +1,424 @@
 ---
-title: "My title"
-subtitle: "My subtitle if needed"
-author: 
-  - Zihan Zhang
-  - Another author
-thanks: "Code and data are available at: https://github.com/zihanjasmine/paper2."
+title: ' 304 paper 3 '
+author:
+- Zihan Zhang
+- Qiuhan Wang
+- Haoran LI
 date: "`r format(Sys.time(), '%d %B %Y')`"
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
 output:
-  bookdown::pdf_document2
-toc: FALSE
-bibliography: references.bib
+  pdf_document: default
+  word_document: default
+abstract: More and more Canadian social and economic issues have led to many discussions about stress levels. Assessing people’s mental health is beneficial for the government to take actions to improve people’s happiness index. In the report, we use the “Canadians at Work and Home” aspect of 2016 Canadian Government General Social Survey data to analyze factors influencing Canadian stress levels. The results of the survey suggest that job satisfactions, living standards, sex and many other factors play big roles in stress assessments. Moreover, 39.4% of people feel not stressed and 43.2% of people feel a bit stressed in Canada, which means that government can take more actions to help people balance their lifestyle, work, and well-being.
+thanks: 'Code and data are available at: '
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+```
 
+
+
+
+```{r,include=FALSE}
 library(tidyverse)
 library(ggplot2)
-```
-
-# Introduction
-
-You can and should cross-reference sections and sub-sections. For instance, Section \@ref(data). R Markdown automatically makes the sections lower case and adds a dash to spaces to generate labels, for instance, Section \@ref(first-discussion-point). 
-
-
-
-# Data
-
- (Figure \@ref(fig:bills)).
-
-```{r bills, fig.cap="Bills of penguins", echo = FALSE}
-# Replication of Figure 1
-f1 <- read.csv("fig_1.csv")
-ggplot(f1, aes(x = year, y=brate_all)) +
-  geom_point() +
-  geom_line() +
-  labs(y="Births per 1,000 women age 15–44") +
-  theme_minimal() +
-
+library(lme4)
+library(modelsummary)
 ```
 
 
 
 
-
-
-
-
-Also bills and their average (Figure \@ref(fig:billssssss)). (Notice how you can change the height and width so they don't take the whole page?)
-
-```{r billssssss, fig.cap="More bills of penguins", echo = FALSE, fig.width=8, fig.height=4}
-
-# This needs to be about the random data tha tI sasmpled?
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = FALSE) +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+```{r,include=FALSE}
+# import data
+raw_data <- read_csv("raw data.csv")
 ```
 
- 
 
 
 
-# Model
+```{r ,include=FALSE}
+cleanda <- da%>%
+  filter(smg_01 <= '5') %>%
+  filter(smk_05 <= '3') %>%
+  filter(drr_110 <= '7') %>%
+  filter(smg_02 <= '7') %>%
+  filter(dos_01 <= '10') %>%
+  mutate(stress = case_when(smg_01 == '1' ~"Not at all stressful",
+                            smg_01 == '2' ~ "Not very stressful",
+                            smg_01 == '3' ~ "A bit stressful",
+                            smg_01 == '4' ~ "Quite A bit stressful",
+                            TRUE ~ "Extremely stressful")) 
 
-\begin{equation}
-Pr(\theta | y) = \frac{Pr(y | \theta) Pr(\theta)}{Pr(y)}  (\#eq:bayes)
-\end{equation}
-
-Equation \@ref(eq:bayes) seems useful, eh?
-
-Here's a dumb example of how to use some references: In paper we run our analysis in `R` [@citeR]. We also use the `tidyverse` which was written by @thereferencecanbewhatever If we were interested in baseball data then @citeLahman could be useful. 
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
 
 
-# Results
 
-# Discussion
+maledata <- cleanda %>%
+  filter(sex == '1')
 
-## First discussion point
+femaledata <- cleanda %>%
+  filter(sex =='2')
+```
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
 
-## Second discussion point
 
-## Third discussion point
 
-## Weaknesses and next steps
+## Introduction
 
-Weaknesses and next steps should also be included.
+More and more Canadian social and economic issues have led to many discussions about the relationship between work, lifestyle, and well-being. Although people are enjoying the conveniences from a technology high-quality life from economic growth, they face much pressure at the same time and even feel less happy than before. (Testing and modeling the fatigue behavior of GFPR composites, Wahid Ferdous, 2020) How to balance life and work in a competitive environment becomes a serious problem. Canadians are encouraged to assess and evaluate their stress level because the government can take actions to increase people’s well-being and decrease their pressure according to their responses. People’s healthy mental condition is beneficial to national growth. Our aim is to help the Canadian government further understand what the characteristics of stressed people are and how to reduce their stress.
+
+A short survey was created and conducted in 2016 to assess the mental health of all persons who are equal to or larger than 15 years old in 10 provinces in Canada. To ensure proper stratification and geographic distribution, our sample population be reached via letter. The letters are sent to the households which include purpose and access code to login in survey applicants. In order to decrease the non-respond rate, the survey is conducted online and via telephone. From the response, most of responders feel not very stressful or a little bit stressful. To be more specific, pressure of mainly comes from work, while pressure of females mainly comes from family. The number of children in households influences people’s stress level as well. The logistic model displays that standard living and personal relationship are other two large factors to influence stress level. 
+
+From our survey responses, some limitations and survey response biases were observed. For the sample population, we found that some homeless people cannot be connected via mail or telephone, but they are included in the target population. Also, this kind of person is more likely to have a lower health rate assessment because of poor quality of life. It might influence the result of the survey. Also, using computer-assisted telephone interviews may bring some non-sampling errors. In detail, interviewers may have some technical problems or misunderstand instructions. From GSS, some questionnaires suggested ambitious answer such as rating job satisfactions, because responders may self-rate themselves with the different standards. Therefore, a further survey must be operated in order to group the people under high mental pressure.
+
+The article is structured as follows. First, I introduce the survey including the survey method and detailed questionnaires relating to mental health. Second, some important variables such as sex, satisfaction with work, life habits are collected, in order to analyze what kind of group bears greater mental pressure. Finally, the supplementary survey is provided to get more information about the target group and increase the accuracy of the data.    
+
+
+
+
+
+
+
+
+## Data
+
+
+
+
+```{r}
+
+library(modelsummary)
+cleanda %>% 
+  datasummary_skim(type = "categorical",
+                   title = "Summary of categorical economic indicator 
+                   variables for four countries")
+
+```
+
+
+
+
+
+
+## Data 
+
+### Data collection
+
+All the data used in this paper was retrieved from Candian General Social Survey (GSS). Candian GSS is a government-funded program that gathers data from social surveys to evaluate the well-being of Canadians. (Government of Canada, 2017) In this paper, we focus on the survey titled “General social survey on Canadians at Work and Home (cycle 30), 2016”. The survey was conducted from August to December 2016. Telephone interviews (landline and cellular) were conducted for a sample of the population aged over 15 years old living in 10 Canadian provinces. The survey is unique, there is no similar dataset in Canadian GSS. To protect the confidentiality of Canadians, the use of data from Canadian GSS is restricted. Data can be accessed by submitting a request form or through secure university settings. 
+
+###Data processing 
+
+All analysis was done with a statistic programming language R (R Core Team 2020). We downloaded some important variables from the survey “General social survey on Canadians at Work and Home” like stress level, alcohol consumption, etc. from Candian GSS and loaded it to R. During our analysis, we ignored the data for which the answer was skipped and not known using the R function “filter”. R package “tidyverse” is used to manipulate the data and “ggplot2” is used for data visualization. 
+
+
+###Population and sample
+
+The GSS survey collected 19,609 questionnaires. The target population is non-institutionalized individuals aged over 15 years old in 10 Canadian provinces. 
+In this paper, we selected only some of the useful variables related to mental health in the survey and eliminated invalid responses. Therefore, our data is reduced and it contains 16440 observations. Since we have a large amount of data, removing some observations will not lead to a significant impact on the conclusions drawn from the data.
+
+
+### Survey method
+
+We used the stratified sampling method to choose the households and convey the survey. The data provided by GSS was more authoritative and comprehend since it was collected by the Canadian government. The target population of the survey includes is all persons who are equal to or larger than 15 years old in Canada. The entire target population lives in 10 provinces of Canada including St. John’s, Halifax, Saint John, Montreal, Quebec City, Toronto, Ottawa, Hamilton, Winnipeg, Regina, Saskatoon, Calgary, Edmonton, and Vancouver. Also, People from Yukon, Northwest Territories, and Nunavut and full-time residents of institutions weren’t included in the survey. We stratified the population into 27 strata according to Census Metropolitan Areas in the 10 provinces, and each stratum was sampled without replacement. To ensure acceptable sampling variability at the stratum level and proper geographic distribution, we set minimum sample sizes in each province. The 2016 GSS sampling frame included the “cell phone only” households, which were not covered in previous frames. 86% of available telephone numbers linked to the address register (AR) and 14% of telephone numbers not linked to the AR were both included.  
+
+The data were collected electronically as a self-completed questionnaire (EQ) via computer-assisted telephone interviews (CATI). To collect data, paper introductory letters were first sent to households and the letters provided the access code to log in to the online survey application. Once the application starts, the household member needed to fill in all family members’ information including sex, contact numbers, email address, and so on. The application randomly selected someone from the household as the respondent to complete EQ via emails and they were interviewed in the official language of their choice to solve language understanding problems. If the respondents provided valid emailing addresses or refused to participate in the survey, they were re-contacted via CATI to explain the importance of the survey, encouraged to participate, and interviewed. When the interviewing progressed by CATI, the responses to the question were entered into the computer and followed the flow of the questionnaire directly. Both EQ results and CATI data were transmitted to Statistics Canada.
+
+A total of 19,609 respondents were sampled, among which 31.1% were responses obtained from EQ and 68.9% were responses obtained from CATI. Although efforts have been made to encourage responses, the overall response rate was only 50.8%. Non-response bias might cause the result to be underestimated or overestimated. Therefore, non-response was solved by adjustment. Total non-responding telephone numbers were dropped. Adjustments were made for partial non-response, so these households had some auxiliary information that was used to a model propensity to respond.
+
+Non-sampling errors may occur at survey operation, especially in the CATI phase. In detail, using CATI, interviewers may misunderstand instructions and respondents may make errors in answering questions. Therefore, the results of the survey may be inaccurately recorded in the system so that the errors may be viewed in the final data. To combat this factor, many measures were used to promise the quality of data and reduce the non-sampling errors at the data collecting step. These measures included the use of highly skilled interviewer’s judging respondents’ answers accurately, training of interviewers focused on questionnaire and observation of interviewers’ misunderstanding of instructions.
+
+
+
+
+
+```{r piegraph,warning=FALSE,message=FALSE,echo = FALSE}
+names = c("Work", 
+          "Financial concerns", 
+          "Family", 
+          "School work", 
+          "Not enough time", 
+          "Own health", 
+          "Other" )
+
+
+
+# count the number of people for each main source of stress
+p1 <- sum(cleanda$smg_02 ==1) 
+p2 <- sum(cleanda$smg_02 ==2)
+p3 <- sum(cleanda$smg_02 ==3)
+p4 <- sum(cleanda$smg_02 ==4)
+p5 <- sum(cleanda$smg_02 ==5)
+p6 <- sum(cleanda$smg_02 ==6)
+p7 <- sum(cleanda$smg_02 ==7)
+
+y=c(p1,p2,p3,p4,p5,p6,p7)
+
+# calculate the percentage
+piepercent = paste(round(100*y/sum(y)), "%")
+pie(y, labels=piepercent,col = rainbow(length(y)), main ="Main source of stress")
+legend("topright", names, cex=0.8, fill=rainbow(length(y)))
+
+
+
+par(mfrow=c(1,2))
+
+m1 <- sum(maledata$smg_02 ==1) 
+m2 <- sum(maledata$smg_02 ==2)
+m3 <- sum(maledata$smg_02 ==3)
+m4 <- sum(maledata$smg_02 ==4)
+m5 <- sum(maledata$smg_02 ==5)
+m6 <- sum(maledata$smg_02 ==6)
+m7 <- sum(maledata$smg_02 ==7)
+
+y1=c(m1,m2,m3,m4,m5,m6,m7)
+
+# calculate the percentage
+piepercent = paste(round(100*y1/sum(y1)), "%")
+piemale <-pie(y1, 
+              labels=piepercent,
+              col = rainbow(length(y1)), 
+              main ="Main source of stress for male")
+
+
+
+
+
+
+fm1 <- sum(femaledata$smg_02 ==1) 
+fm2 <- sum(femaledata$smg_02 ==2)
+fm3 <- sum(femaledata$smg_02 ==3)
+fm4 <- sum(femaledata$smg_02 ==4)
+fm5 <- sum(femaledata$smg_02 ==5)
+fm6 <- sum(femaledata$smg_02 ==6)
+fm7 <- sum(femaledata$smg_02 ==7)
+
+y2=c(fm1,fm2,fm3,fm4,fm5,fm6,fm7)
+
+# calculate the percentage
+piepercent = paste(round(100*y2/sum(y2)), "%")
+piefemale <-pie(y2, 
+              labels=piepercent,
+              col = rainbow(length(y2)), 
+              main ="Main source of stress for female")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r alcohol,warning=FALSE,message=FALSE,echo = FALSE}
+# create a function to arrange elements alphabetically
+
+
+ggplot(cleanda,
+       aes(x=stress,
+           fill = factor(drr_110, 
+                         levels =c("1","2","3","4","5","6","7"),
+                         labels = c("Everyday",
+                                    "4-6 times a week",
+                                    "2-3 times a week",
+                                    "Once a week",
+                                    "Once or twice in the past month",
+                                    "Not in the past month","Never")))
+       ) +
+geom_bar(position = "stack") +
+labs(x="stress level",
+     fill="Alcohol consumption",
+     title="Alcohol consumption and stress level") +
+coord_flip() +
+theme_minimal()
+
+```
+
+
+
+
+
+
+
+```{r}
+ggplot(cleanda,
+       aes(x=stress,
+           fill= factor(smk_05,
+                        levels =c("1","2","3"),
+                        labels = c("Daily",
+                                    "Occasionally",
+                                    "Not at all")))
+       )+
+geom_bar(position = "stack") +
+labs(x="stress level",
+     fill="Smoking status",
+     title="Smoking status and stress level") +
+coord_flip() +
+theme_minimal()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+ggplot(cleanda, 
+       aes(x = stress, 
+           fill = factor(dos_01))) + 
+geom_bar(position = "dodge") +
+labs(x="stress level",
+     fill="Job satisfaction",
+     title="Job satisfaction and stress level")
+
+
+
+
+
+ggplot(cleanda, 
+       aes(x = stress, 
+           fill = factor(dos_04))) + 
+geom_bar(position = "dodge") +
+labs(x="stress level",
+     fill="Personal relationships",
+     title="Personal relationships and stress level")
+```
+
+
+
+
+
+
+```{r}
+Name = c("0-15 hours", 
+         "16-29 hours", 
+          "30 to 40 hours", 
+          "Over 41 hours")
+h1 <- sum(cleanda$whw120gr =='1') 
+h2 <- sum(cleanda$whw120gr =='2')
+h3 <- sum(cleanda$whw120gr =='3')
+h4 <- sum(cleanda$whw120gr =='4')
+
+hour=c(h1,h2,h3,h4)
+cols = c("#ED1C24","#22B14C","#FFC90E","#3f48CC")
+# calculate the percentage
+piepercent = paste(round(100*hour/sum(hour)), "%")
+# draw the pie graph
+pie(hour, labels=piepercent,col = cols, main ="Number of hours worked per week at job")
+legend("topright", Name, cex=0.8, fill=cols)
+```
+
+
+
+
+
+```{r}
+library(lme4)
+
+model <- lmer(smg_01 ~ sex+ dos_01 +dos_02 +dos_04 +chh0014c +agegr10+ (1|smk_05), data=cleanda)
+summary(model)
+
+
+```
+
+
+
+
+
 
 \newpage
 
-\appendix
+## Discussion
 
-# Appendix {-}
+## Survey
 
+A survey was created and conducted by the Canadian Government assess the mental health status of all people from aged 15 or older in 10 Canadian provinces. We choose 16 major questions from the survey which is related on the respondent's gender, age, marital status, number of children in the household, participation in the outdoor activities in the past 12 months, hours worked at job per week, level of stress in the daily life, major stress, Alcohol, Smoke, satisfaction about their job, Discrimination during work, level of their satisfaction from standard, health, personal relationship,and the appearance themselves. The aims of the report is based on the fact that what Canadian stress really comes from. For example, the answers to questions 1-12 are raised on the basis of individual choices, while questions about their satisfaction levels (questions 13-16) are ranked in linear scale（0 being not at all satisfied, 10 being completely satisfied. This survey is contacted by letter. Considering the low response rate or the possibility of no response, the survey was also conducted through the Internet and telephone. Overall, the survey aims to provide real data to the government on the basis of current Canadian stress, so that the government can reduce the current pressure on Canadians by introducing corresponding policies.
 
-# Additional details
+## Result
 
+From the main source of stress about Canadians (Figure 1), male and female have different stress aspect among each other.We can see that male, respond to greater stress at work, about 32%(figure 2), while female's stress comes from the family, accounted for 26%(figure 3). Moreover, in the Alcohol consumption aspect, some Canadians do not use alcohol to relieve stress when they have a bit stressful or not very stressful. However, some people use alcohol once or twice a month to help them reduce stress. However, the result shown in figure 5 is very interesting, they don't reduce stress by smoking. Surprisingly，the respondent satisfied about their current job,shown in figure 6.
 
-\newpage
-
-
-# References
-
-```{r include=FALSE}
-citation()
-citation(package = "ggplot2")
+```{r, include=TRUE, message=FALSE, echo=FALSE}
+parallel_lines <-lm(smg_01 ~ sex+ dos_01 +dos_02 +dos_04 +chh0014c +agegr10+ (1|smk_05), data=cleanda)
+summary(parallel_lines)
 ```
 
 
-1. R
 
- R Core Team (2021). R: A language and environment for statistical computing. R
-  Foundation for Statistical Computing, Vienna, Austria. URL
-  https://www.R-project.org/.
-  
-2. ggplot2
+```{r, include=TRUE, message=FALSE, echo=FALSE}
+cleanda %>%
+  ggplot(aes(x=marstat, y=chh0014c, color=stress))+
+  geom_point(alpha=0.5)+geom_smooth(method="lm",se=FALSE)
+```
 
- H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New
-  York, 2016.
+Graph 1 illustrate the distribution of martial status(marstat) and number of children in the household(chh0014c). 
+```{r, include=TRUE, message=FALSE, echo=FALSE}
+maledata %>%
+  ggplot(aes(x=agearr10, y=marstat, color=stress))+
+  geom_point(alpha=0.5)+geom_smooth(method="lm",se=FALSE)
+```
+
+
+```{r, include=TRUE, message=FALSE, echo=FALSE}
+femaledata %>%
+  ggplot(aes(x=chh0014c, y=marstat, color=stress))+
+  geom_point(alpha=0.5)+geom_smooth(method="lm",se=FALSE)
+```
+
+
+```{r, include=TRUE, message=FALSE, echo=FALSE}
+cleanda %>%
+  ggplot(aes(x=drr_110, y=smk_05, color=stress))+
+  geom_point(alpha=0.5)+geom_smooth(method="lm",se=FALSE)
+```
+
+
+
+# survey question 
+
+
+### Survey introduction
+
+Dear participants,
+
+I am writing to invite you to participate in this research by completing the questionnaire. This survey aims to study various factors that make Canadians feel stressed. The following questionnaire contains a few multiple-choice questions and it will take approximately 5 minutes. All data collected will be kept confidential by the government of Canada. An extensive disclosure risk analysis is conducted before releasing the data to ensure that the data does not reveal personal information. Individual responses are not shared.
+Thanks for your corporation.
+
+Sincerely,
+On behalf of the government of Canada
+
+
+https://docs.google.com/forms/d/e/1FAIpQLSdCXMqiHZyVJzhO5mn4ewHXJ_EHNakJrglcv-p3J-DQEncBTw/viewform?usp=sf_link
+
+
+
+# Reference
+
+Government of Canada, S. C. (2017, February 27). The General Social Survey: An overview. Government of Canada, Statistics Canada. Retrieved March 8, 2022, from https://www150.statcan.gc.ca/n1/pub/89f0115x/89f0115x2013001-eng.htm
+
