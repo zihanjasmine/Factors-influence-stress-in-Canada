@@ -21,7 +21,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r,include=FALSE}
 library(tidyverse)
 library(ggplot2)
-library(lme4)
 library(modelsummary)
 ```
 
@@ -67,9 +66,6 @@ The article is structured as follows. First, I introduce the survey including th
 
 
 ## Data
-
-
-
 
 
 
@@ -354,7 +350,7 @@ labs(x="stress level",
 ```{r regression, warning=FALSE,message=FALSE,echo = FALSE}
 
 
-regression_model <- lm(stresslevel ~ sex+ health_level +personal_relationship_level +number_of_children +age_group+ job_satisfaction +apperance_level, data=clean_data)
+regression_model <- lm(stresslevel ~ sex+ health_level +personal_relationship_level +number_of_children +age_group+ job_satisfaction +appearance_level, data=clean_data)
 
 
 
@@ -370,10 +366,31 @@ Based on our findings above, we build a linear regression model to estimate Cana
 
 ## Discussion
 
+### Purpose and summary for the survey
 
+Nowadays, more and more people suffer pressure from work, financial concerns, family, school work, health conditions, time management, and other aspects. To improve people’s satisfaction with life and reduce people’s pressure, investigating their pressure resources is necessary. 
 
+In the report, we use the “Canadians at Work and Home” aspect of 2016 Canadian Government General Social Survey data to analyze the target population’s stress level. Our target population includes all persons who are equal to or larger than 15 years old in St. John’s, Halifax, Saint John, Montreal, Quebec City, Toronto, Ottawa, Hamilton, Winnipeg, Regina, Saskatoon, Calgary, Edmonton, and Vancouver(10 provinces of Canada). Canadian government statistics collected responders’ results via email and telephone.
 
+To analyze the factors influencing the target population’s stress level, we select 14 variables from GSS including sex, age group, children in household, number of hours worked per week at the job, level of stress in life, the stress in life, alcohol consumption, smoking at present, job satisfaction, discrimination, the standard of living, health satisfaction, personal relationships, personal appearance satisfaction. In the research, we identify the characteristics of the high-pressure group and find the main pressure resources for males and females, so some measures can be made according to the results. To get more information and help responders learn their stress level and satisfactions of their lives, we add a questionnaires survey in the Appendix to increase the accuracy of the survey.
 
+### Learn about the world
+
+From the result of the survey, we learn that the overall stress level in 10 provinces of Canada has room to be decreased. Because 43.2% people feel a bit stressed and 13.9% people feel quite a bit stressed. 
+
+After further researching, on the one hand, we find that females are more likely to take on family responsibilities. They are expected to do housework, look after children and the old. The pressure level of females in the family having 4 children is higher than those in the family having 1 child because mothers usually take responsibility for meticulous care for children. If males in the family would like to share some housework, females’ workload can be reduced. If the government announces more policies to take care of the old, it’s beneficial to improve family living qualities as well. On the other hand, we find that males’ pressure mainly comes from work. 24% of people work more than 41 hours per week, which means that they work over 8 hours per weekday or they work on the weekend. Long hours at work may bring pressure and anxiety to people. High workload and overtime working can be considered reasons why people feel stressed from work. According to this finding, we suggest the managers of companies balance workers’ leisure time and work time, and allocate tasks to each worker wisely. Also, career discrimination should be avoided in working, because the bad relationship between colleagues not only influences the workers’ mental health but also influences work efficiency. Creating a good working environment should be encouraged.
+
+To the people who feel stressful because of their health condition, the companies where they work for can provide physical examination to them. The physical examination can help people assess their health status, so some potential illness can be discovered as early as possible. The government can give more subsidies to people with serious disease in order to help them be recovery.       
+
+### Weakness and areas in the future
+
+Our survey method contains some limitations and the survey method can be improved by some approaches. First, in the survey, we only select one of the members in a household which means that the member who be selected cannot represents other household members’ opinions. It may influence the accuracy of the result. Therefore, selecting more members in a household may be a better way to collect data. Second, the government statistic department connects with respondents via mail or telephone. This process may ignore the group of people who cannot connect with these two approaches, such as the homeless. However, the responses from this group are valuable to our research, because this particular group of people is more likely to suffer from stress. The homeless’ job satisfaction, unfair treatment/discrimination, participation in outdoor activities, and other variables may be different with existing respondents’. The homeless’ living habits including alcohol consumption and smoking frequency may need to be further investigated. In the future survey, we suggest adding a new approach in-person questionnaire to collect data so that the homeless group can be contained. 
+
+Some non-sampling errors occur in the survey as well. Using CATI to collect data, interviewers may misunderstand instructions and respondents especially the olds may make errors in answering questions. Therefore, the results of the survey may be inaccurately recorded in the system so that the errors may be viewed in the final data. To combat this factor and promise the quality of data, some technical measures should be considered. These measures included the use of highly skilled interviewers judging respondents’ answers accurately, training of interviewers focused on the questionnaire, and observation of interviewers’ misunderstanding of instructions.
+
+In addition, some questions in the survey are ambiguous which may influence the result of the survey. To be more specific, everyone has his standards to estimate his job satisfaction from 1 to 10 so that we cannot unitize the results. Also, some responders cannot identify their stress level because it’s so abstract. Therefore, we do an additional questionnaire to help responders rate themselves. For example, we add questions “How often have you been bothered by poor appetite?” and “How often do you feel depressed?” to describe details of stress. Similar ambiguous self-rating questions appearing in job satisfaction and other variables, we suggest to use more specific questions to instead as well.
+
+Finally, we should do more researches to describe the impacts of stress. When people are fully aware of the high-stress level’s harm to their health condition and mental condition, they would pay attention to deal with pressure. The social problem, like “How to balance life, work and well-being” can raise concern. 
 
 # survey question 
 
