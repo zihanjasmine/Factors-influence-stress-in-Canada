@@ -418,10 +418,12 @@ Finally, we should do more research to describe the impacts of stress. When peop
 
 
 \newpage
-# Supplementary survey 
+# Appendix
+
+## Supplementary survey 
 
 
-## Survey introduction
+### Survey introduction
 
 Dear participants,
 
@@ -433,7 +435,7 @@ Sincerely,
 
 On behalf of the government of Canada
 
-## Queationnaire
+### Queationnaire
 
 https://docs.google.com/forms/d/e/1FAIpQLSdCXMqiHZyVJzhO5mn4ewHXJ_EHNakJrglcv-p3J-DQEncBTw/viewform?usp=sf_link
 
