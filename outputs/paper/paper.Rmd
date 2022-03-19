@@ -54,7 +54,7 @@ femaledata <- clean_data %>%
 \newpage
 # Introduction
 
-More and more Canadian social and economic issues have led to many discussions about the relationship between work, lifestyle, and well-being. Although people are enjoying the conveniences from a technology high-quality life from economic growth, they face much pressure at the same time and even feel less happy than before. (Testing and modeling the fatigue behavior of GFPR composites, Wahid Ferdous, 2020) How to balance life and work in a competitive environment becomes a serious problem. Canadians are encouraged to assess and evaluate their stress level because the government can take actions to increase people’s well-being and decrease their pressure according to their responses. People’s healthy mental condition is beneficial to national growth. Our aim is to help the Canadian government further understand what the characteristics of stressed people are and how to reduce their stress.
+More and more Canadian social and economic issues have led to many discussions about the relationship between work, lifestyle, and well-being. Although people are enjoying the conveniences from a technology high-quality life from economic growth, they face much pressure at the same time and even feel less happy than before. How to balance life and work in a competitive environment becomes a serious problem. Canadians are encouraged to assess and evaluate their stress level because the government can take actions to increase people’s well-being and decrease their pressure according to their responses. People’s healthy mental condition is beneficial to national growth. Our aim is to help the Canadian government further understand what the characteristics of stressed people are and how to reduce their stress.
 
 Workload and working environment are two factors influencing people's stress levels, which were discussed in the book "Are Quebecers More Stressed Out at Work Than Other" by the University of Ottawa Department of Economics in 2016. We already know the standard of living and health conditions will affect people's stress level in the UK, maybe not in Canada so we want to see how the variables affect Canadians(Hulst et al., 2014). There are variables such as alcohol consumption and smoking frequency potentially affect stress level but weren't investigated before. 
 
@@ -90,18 +90,17 @@ In this paper, we selected only some of the useful variables related to mental h
 
 Here we show an extract of our dataset.(Table \@ref(tab:tablestress))
 
-```{r tablestress, echo=FALSE,message=FALSE,warning=FALSE}
+```{r tablestress,echo=FALSE,message=FALSE,warning=FALSE}
 
 
 clean_data <- clean_data %>%
   mutate(stress=fct_relevel(stress,"Extremely stressful", after=3)) %>%
    mutate(stress=fct_relevel(stress,"A bit stressful", after=1))
 
-
 clean_data %>% 
   datasummary_skim(type = "categorical",
-                   title = "Summary of categorical economic indicator 
-                   variables for four countries")
+                   title = "Summary of categorical 
+                   variables")
 
 ```
 
@@ -135,11 +134,7 @@ Non-sampling errors may occur at survey operation, especially in the CATI phase.
 
 
 
-
-
-
-
-```{r piegraph,warning=FALSE,message=FALSE,echo = FALSE}
+```{r piegraph,fig.cap="Main source of stress",warning=FALSE,message=FALSE,echo = FALSE}
 names = c("Work", 
           "Financial concerns", 
           "Family", 
@@ -167,6 +162,17 @@ pie(y, labels=piepercent,col = rainbow(length(y)), main ="Main source of stress"
 legend("topright", names, cex=0.8, fill=rainbow(length(y)))
 
 
+
+
+```
+
+
+
+
+
+
+
+```{r piegender, fig.cap="Main source of stress for male and female",warning=FALSE,message=FALSE,echo = FALSE}
 
 par(mfrow=c(1,2))
 
@@ -208,6 +214,9 @@ piefemale <-pie(y2,
               labels=piepercent,
               col = rainbow(length(y2)), 
               main ="Main source of stress for female")
+
+
+
 ```
 
 
@@ -218,7 +227,7 @@ piefemale <-pie(y2,
 
 
 
-```{r hours,warning=FALSE,message=FALSE,echo = FALSE}
+```{r hours,fig.cap="Number of hours worked per week at job",warning=FALSE,message=FALSE,echo = FALSE}
 Name = c("0-15 hours", 
          "16-29 hours", 
           "30 to 40 hours", 
@@ -246,15 +255,8 @@ legend("topright", Name, cex=0.8, fill=cols)
 
 
 
+```{r alcohol,fig.cap="Alcohol consumption and stress level",warning=FALSE,message=FALSE,echo = FALSE}
 
-
-
-
-
-
-
-```{r alcohol,warning=FALSE,message=FALSE,echo = FALSE}
-# create a function to arrange elements alphabetically
 
 
 ggplot(clean_data,
@@ -270,8 +272,7 @@ ggplot(clean_data,
        ) +
 geom_bar(position = "stack") +
 labs(x="stress level",
-     fill="Alcohol consumption",
-     title="Alcohol consumption and stress level") +
+     fill="Alcohol consumption") +
 coord_flip() +
 theme_minimal()
 
@@ -283,7 +284,11 @@ theme_minimal()
 
 
 
-```{r smoking,warning=FALSE,message=FALSE,echo = FALSE}
+
+
+
+
+```{r smoking,fig.cap="Smoking status and stress level",warning=FALSE,message=FALSE,echo = FALSE}
 ggplot(clean_data,
        aes(x=stress,
            fill= factor(smoking_status,
@@ -294,8 +299,7 @@ ggplot(clean_data,
        )+
 geom_bar(position = "stack") +
 labs(x="stress level",
-     fill="Smoking status",
-     title="Smoking status and stress level") +
+     fill="Smoking status") +
 coord_flip() +
 theme_minimal()
 ```
@@ -311,30 +315,27 @@ theme_minimal()
 
 
 
-
-
-
-
-```{r satisfaction,warning=FALSE,message=FALSE,echo = FALSE}
+```{r satisfaction,fig.cap="Job satisfaction and stress level",warning=FALSE,message=FALSE,echo = FALSE}
 ggplot(clean_data, 
        aes(x = stress, 
            fill = factor(job_satisfaction))) + 
 geom_bar(position = "dodge") +
 labs(x="stress level",
-     fill="Job satisfaction",
-     title="Job satisfaction and stress level")
+     fill="Job satisfaction")
+```
 
 
 
 
 
+
+```{r relationship,fig.cap="Personal relationship and stress level",warning=FALSE,message=FALSE,echo = FALSE}
 ggplot(clean_data, 
        aes(x = stress, 
            fill = factor(personal_relationship_level))) + 
 geom_bar(position = "dodge") +
 labs(x="stress level",
-     fill="Personal relationships",
-     title="Personal relationships and stress level")
+     fill="Personal relationships")
 ```
  
 
@@ -355,13 +356,17 @@ labs(x="stress level",
 
 
 
-```{r regression, warning=FALSE,message=FALSE,echo = FALSE}
+
+```{r regression,fig.cap="Personal relationship and stress level",warning=FALSE,message=FALSE,echo = FALSE}
 
 
 regression_model <- lm(stresslevel ~ sex+ health_level +personal_relationship_level +number_of_children +age_group+ job_satisfaction +appearance_level, data=clean_data)
 
-modelsummary(regression_model)
+modelsummary(regression_model,
+             title = "Linear regression model of stress level")
 ```
+
+
 
 
 
@@ -369,7 +374,7 @@ We can see that almost half of the sampling population works 40 hours per week, 
 
 From figure \@ref(fig:alcohol) about 10% of people who feel not very stressful and a bit stressful smoke every day, and 20% of people who feel extremely stressful smoke every day. When stress becomes excessive, many Canadians increase the use of cigarettes to relieve stress in life. However, in figure \@ref(fig:smoking) there is no strong correlation between stress level and alcohol consumption. Many people smoke to ease feelings of stress, however, smoking only makes things worse. Smoking increases the risks of cancer, lung disease, and many chronic diseases. Nicotine provides immediate relaxation, but the effect is temporary. The feeling of relaxation is actually the symptom of withdrawal from nicotine (Choi et al., 2015). 
 
-From figure \@ref(fig:satisfaction), we can conclude that job satisfaction and personal relationship are negatively correlated with stress. people are satisfied with their job and confident about their personal relationships usually not bothered by stress. 
+From figure \@ref(fig:satisfaction) and figure \@ref(fig:relationship), we can conclude that job satisfaction and personal relationship are negatively correlated with stress. people are satisfied with their job and confident about their personal relationships usually not bothered by stress.
 
 Based on our findings above, we build a linear regression model to estimate Canadian's stress level. From table \@ref(tab:regression), older people with lower job satisfaction and lower health level has higher stress level. Appearance level and personal relationship level has weak correlation with stress. However, our model has a low R-Squared value, which suggests that the goodness of fitting is not ideal. 
 
