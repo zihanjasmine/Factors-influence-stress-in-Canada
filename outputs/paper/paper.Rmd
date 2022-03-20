@@ -515,6 +515,7 @@ knitr::include_graphics("Questionnaire8.png")
 
 \newpage
 # Reference
+General Social Survey (Canadians at work ... - GSG.UOTTAWA.CA. (n.d.). Retrieved March 20, 2022, from https://gsg.uottawa.ca/data/teaching/soc/GSSC30EN_cbk_person.pdf 
 
 H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New 
 York, 2016.
