@@ -515,13 +515,14 @@ knitr::include_graphics("Questionnaire8.png")
 
 \newpage
 # Reference
-General Social Survey (Canadians at work ... - GSG.UOTTAWA.CA. (n.d.). Retrieved March 20, 2022, from https://gsg.uottawa.ca/data/teaching/soc/GSSC30EN_cbk_person.pdf 
 
-H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New 
-York, 2016.
+General Social Survey (Canadians at work ... - GSG.UOTTAWA.CA. (n.d.). Retrieved March 20, 2022, from https://gsg.uottawa.ca/data/teaching/soc/GSSC30EN_cbk_person.pdf 
 
 Government of Canada, S. C. (2017, February 27). The General Social Survey: An 
 overview. Government of Canada, Statistics Canada. Retrieved March 8, 2022, from https://www150.statcan.gc.ca/n1/pub/89f0115x/89f0115x2013001-eng.htm
+
+H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New 
+York, 2016.
 
 R Core Team (2021). R: A language and environment for statistical computing. R 
 Foundation for Statistical Computing, Vienna, Austria. URL
