@@ -2,7 +2,6 @@
 # Purpose: Clean the survey data downloaded from Canadian GSS
 # Author: -Zihan Zhang
 # Data: 15 March 2021
-# Contact: rohan.alexander@utoronto.ca [PROBABLY CHANGE THIS ALSO!!!!]
 # License: MIT
 # Pre-requisites: 
 # - Need to have downloaded the ACS data and saved it to inputs/data
